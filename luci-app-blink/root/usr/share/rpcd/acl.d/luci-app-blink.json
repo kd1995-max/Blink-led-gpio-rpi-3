@@ -1,0 +1,14 @@
+{
+    "luci-app-blink": {
+        "description": "Permission to use luci-app-blink",
+        "read": {
+            "uci": ["blink"],
+            "file": ["/usr/bin/blink_led"],
+            "exec": ["/usr/bin/blink_led"]
+        },
+        "write": {
+            "uci": ["blink"],
+            "exec": ["/usr/bin/blink_led"]
+        }
+    }
+}

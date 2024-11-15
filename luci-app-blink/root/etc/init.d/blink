@@ -1,0 +1,51 @@
+#!/bin/sh /etc/rc.common
+
+START=99
+STOP=10
+
+USE_PROCD=1
+
+start_service() {
+    rm /tmp/lock/procd_blink.lock                          
+    logger -t blink-led "Reloading blink-led configuration"
+                     
+    config_load blink                
+    config_get ENABLE settings enable
+                                                               
+    # Based on ENABLE status, start or stop the daemon directly
+    if [ "$ENABLE" = "1" ]; then                                       
+        logger -t blink-led "Enabling blink-led based on config update"
+        /usr/bin/blink_led &
+    else                                                                
+        logger -t blink-led "Disabling blink-led based on config update"
+        killall blink_led
+    fi
+}
+
+stop_service() {
+    killall blink_led
+}
+
+reload_service() {
+    rm /tmp/lock/procd_blink.lock
+    logger -t blink-led "Reloading blink-led configuration"
+    
+    config_load blink
+    config_get ENABLE settings enable
+
+    # Based on ENABLE status, start or stop the daemon directly
+    if [ "$ENABLE" = "1" ]; then
+        logger -t blink-led "Enabling blink-led based on config update"
+        /usr/bin/blink_led &
+    else
+        logger -t blink-led "Disabling blink-led based on config update"
+	killall blink_led
+    fi
+}
+
+service_triggers() {
+    # Reload service when UCI config for 'blink' changes
+    procd_add_reload_trigger blink
+    logger -t blink-led "Service trigger added for blink config changes"
+}
+

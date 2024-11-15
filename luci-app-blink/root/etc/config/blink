@@ -1,0 +1,2 @@
+config blink 'settings'
+	option enable '1'

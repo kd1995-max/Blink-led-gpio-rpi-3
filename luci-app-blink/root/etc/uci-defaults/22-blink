@@ -1,0 +1,8 @@
+#!/bin/sh
+
+# Ensure the init.d script is executable
+chmod 777 /etc/init.d/blink
+
+/etc/init.d/blink enable
+/etc/init.d/blink start
+
